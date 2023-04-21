@@ -5,12 +5,13 @@ import prog1.kotprog.dontstarve.solution.inventory.items.EquippableItem;
 import prog1.kotprog.dontstarve.solution.inventory.items.ItemAxe;
 import prog1.kotprog.dontstarve.solution.inventory.items.ItemType;
 
+import java.sql.SQLOutput;
 import java.util.*;
 
 
 public class Inventory implements BaseInventory {
 
-    private AbstractItem[] slots;
+    public AbstractItem[] slots;
 
     public Inventory() {
         slots = new AbstractItem[10];
@@ -38,6 +39,7 @@ public class Inventory implements BaseInventory {
     public boolean addItem(AbstractItem item) {
         for (int i = 0; i < slots.length; i++) {
             if (getItem(i) == null){
+                System.out.println("??? getitem i == null: "+getItem(i));
                 if (!item.isStackelheto()){
                     if (item.getAmount() == 1){ //pl AXE
                         slots[i] = item;
@@ -51,14 +53,26 @@ public class Inventory implements BaseInventory {
                 else{
                     //ide kellene a stackelheto itemek vizsgalni
                     if (item.getAmount() <= ItemStack(item)){
+                        System.out.println(i+ " - i");
+                        System.out.println("item.getAmount():" + item.getAmount() + "<= ItemStack(item)"+ItemStack(item));
                         slots[i] = item;
-                        return true; //1 db, 1fajta stackelhető item
+                        System.out.println("sikerult hozzadni");
+                        return true; //Néhány db, 1fajta stackelhető item
                     }
                     if (item.getAmount() > ItemStack(item)){
+                            System.out.println(i+ " - i");
+                            System.out.println("item.getAmount():" + item.getAmount() + "> ItemStack(item)"+ItemStack(item));
+
                         int segedam = item.getAmount();
+                            System.out.println("segedam:"+segedam);
                         item.setAmount(ItemStack(item));
+                            System.out.println("setAmount:"+ItemStack(item));
+                            System.out.println("ellenorzes hogy sikerult e és addoljuk ezt a mennyiseget: getAmount:"+item.getAmount());
+
                         slots[i] = item;
                         item.setAmount(segedam - ItemStack(item));
+                            System.out.println("SET: segedam:"+segedam+"- ItemStack(item)"+ItemStack(item));
+                            System.out.println("tovabblepunk");
                     }
                 }
             }
@@ -198,7 +212,7 @@ public class Inventory implements BaseInventory {
     @Override
     public AbstractItem getItem(int index) {
         if (index <= -1 || index > slots.length){
-
+            throw new ArrayIndexOutOfBoundsException();
         }
         else{
             if (slots[index] == null){
@@ -208,7 +222,6 @@ public class Inventory implements BaseInventory {
                 return slots[index];
             }
         }
-        return null;
 
     }
 
