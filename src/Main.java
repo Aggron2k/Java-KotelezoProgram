@@ -1,5 +1,7 @@
 
+import prog1.kotprog.dontstarve.solution.inventory.Inventory;
 import prog1.kotprog.dontstarve.solution.inventory.items.AbstractItem;
+import prog1.kotprog.dontstarve.solution.inventory.items.ItemTwig;
 import prog1.kotprog.dontstarve.solution.inventory.items.ItemType;
 import prog1.kotprog.dontstarve.solution.inventory.items.EquippableItem;
 
@@ -12,26 +14,57 @@ import java.util.Map;
 public class Main {
 
     public static void main(String[] args) {
-        Map<ItemType, Integer> maxstack;
-        maxstack = new HashMap<>();
-        maxstack.put(ItemType.AXE, 1);
-        maxstack.put(ItemType.PICKAXE, 1);
-        maxstack.put(ItemType.TORCH, 1);
-        maxstack.put(ItemType.SPEAR, 1);
-        maxstack.put(ItemType.LOG, 15);
-        maxstack.put(ItemType.STONE, 10);
-        maxstack.put(ItemType.TWIG, 20);
-        maxstack.put(ItemType.RAW_BERRY, 10);
-        maxstack.put(ItemType.COOKED_BERRY, 10);
-        maxstack.put(ItemType.COOKED_CARROT, 10);
+        Inventory inventory = new Inventory();
+        AbstractItem[] items = inventory.slots;
+        AbstractItem log = new AbstractItem(ItemType.LOG, 16) {
+            @Override
+            public boolean isStackelheto() {
+                return true;
+            }
+        };
+        boolean siker = inventory.addItem(log);
+        if (siker){
+            System.out.println("igen");
+        }else{
+            System.out.println("nem");
+        }
 
-        for (Map.Entry<ItemType,Integer>entry : maxstack.entrySet()) {
-            System.out.println(entry.getKey() +" : "+entry.getValue());
-            
+        for (int i = 0; i < items.length; i++) {
+            if (items[i] != null){
+                System.out.println(items[i].getType() + " - "+ items[i].getAmount());
+            }else{
+                System.out.println("null");
+            }
         }
 
 
-        getItem(9);
+
+
+
+
+
+
+
+//        Map<ItemType, Integer> maxstack;
+//        maxstack = new HashMap<>();
+//        maxstack.put(ItemType.AXE, 1);
+//        maxstack.put(ItemType.PICKAXE, 1);
+//        maxstack.put(ItemType.TORCH, 1);
+//        maxstack.put(ItemType.SPEAR, 1);
+//        maxstack.put(ItemType.LOG, 15);
+//        maxstack.put(ItemType.STONE, 10);
+//        maxstack.put(ItemType.TWIG, 20);
+//        maxstack.put(ItemType.RAW_BERRY, 10);
+//        maxstack.put(ItemType.COOKED_BERRY, 10);
+//        maxstack.put(ItemType.COOKED_CARROT, 10);
+//
+//        for (Map.Entry<ItemType,Integer>entry : maxstack.entrySet()) {
+//            System.out.println(entry.getKey() +" : "+entry.getValue());
+//
+//        }
+//
+//
+//        getItem(9);
 
         //add item elso proba
         //ha a tipusuk megegyezik
@@ -125,24 +158,24 @@ public class Main {
 //        }
     }
 
-    private static void getItem(int index) {
-        List<Integer> slots;
-        slots = new ArrayList<Integer>();
-        for (int i = 0; i < 10; i++){
-            if (i == 0){
-                slots.add(12);
-            }
-            else{
-                slots.add(1);
-            }
-        }
-
-
-        if (index < 0 || index >= slots.size()){
-            System.out.println("null");
-        }
-        else{
-            System.out.println(slots.get(index));
-        }
-    }
+//    private static void getItem(int index) {
+//        List<Integer> slots;
+//        slots = new ArrayList<Integer>();
+//        for (int i = 0; i < 10; i++){
+//            if (i == 0){
+//                slots.add(12);
+//            }
+//            else{
+//                slots.add(1);
+//            }
+//        }
+//
+//
+//        if (index < 0 || index >= slots.size()){
+//            System.out.println("null");
+//        }
+//        else{
+//            System.out.println(slots.get(index));
+//        }
+//    }
 }
