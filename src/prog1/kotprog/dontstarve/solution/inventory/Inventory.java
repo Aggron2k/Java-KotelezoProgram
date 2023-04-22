@@ -50,60 +50,49 @@ public class Inventory implements BaseInventory {
 
     @Override
     public boolean addItem(AbstractItem item) {
-        for (int i = 0; i < slots.length; i++) {
-            if (getItem(i) != null){
-                if (IsStackelheto(item)){
-                    //forciklus
-                    if (slots[i].getType() == item.getType()){
-                        if (slots[i].getAmount() == ItemStack(item)){
-                            continue;
-                        }
-                        if (slots[i].getAmount() < ItemStack(item)){
-                            AbstractItem item2 = item.newitem(ItemStack(item));
-                            int segedam = slots[i].getAmount();
-                            if (segedam + item.getAmount() <= ItemStack(item)){
-                                item2.setAmount(segedam + item.getAmount());
-                                slots[i] = item2;
-                            }
-                            else{
-                                //!
-                                item2.setAmount(segedam + item.getAmount());
-                                slots[i] = item2;
-                            }
-                            break;
-                        }
-                    }
-                }
-                //? else ag ennek?
-            }
-            if (getItem(i) == null){
-                if (!IsStackelheto(item)){
-                    if (item.getAmount() == 1){ //pl AXE
+        if (!IsStackelheto(item)){
+            for (int i = 0; i < slots.length; i++) {
+                if (getItem(i) == null){
+                    if (item.getAmount() == 1){
                         slots[i] = item;
-                        return true; //1db, 1 fajta nem stackelhető item
-                    }
-                    else{
-                        slots[i] = item;//több, 1 fajta nem stackelhető item, tovabb megy
-                        item.setAmount(item.getAmount()-1); //NEM BIZTOS HOGY ÍGY JÓ!
+                        return true; //1db, 1 fajta nem stackelhető item...
                     }
                 }
-                else{
-                    //ide kellene a stackelheto itemek vizsgalni
-                    if (item.getAmount() > ItemStack(item)){
-                        AbstractItem item2 = item.newitem(ItemStack(item));
-                        int segedam = item.getAmount();
-                        item.setAmount(segedam - ItemStack(item));
-                        slots[i] = item2;
-                        continue;
+            }
+        }
+        else{
+            //Stackelhetoek
+            for (int i = 0; i < slots.length; i++) {
+                //ha van indexen item
+                if (getItem(i) != null){
+                    if (item.getType() == slots[i].getType()){
+                        int segedam = ItemStack(slots[i]) - slots[i].getAmount();
+                        if (slots[i].getAmount() <= segedam){
+                            slots[i].setAmount(slots[i].getAmount() + item.getAmount());
+                            return true;
+                        }
+                        else{
+                            slots[i].setAmount(ItemStack(slots[i]));
+                            item.setAmount(item.getAmount() - segedam);
+                        }
+
                     }
+                }
+            }
+            for (int i = 0; i < slots.length; i++) {
+                //nincs az indexen item
+                if (getItem(i) == null){
                     if (item.getAmount() <= ItemStack(item)){
                         slots[i] = item;
-                        return true; //Néhány db, 1fajta stackelhető item
+                        return true;
                     }
-
+                    else{
+                        AbstractItem item2 = item.newitem(ItemStack(item));
+                        slots[i] = item2;
+                        item.setAmount(item.getAmount()-ItemStack(item));
+                    }
                 }
             }
-
         }
         return false;
     }
@@ -128,14 +117,21 @@ public class Inventory implements BaseInventory {
                     slots[i] = null;
                     return true;
                 }
-                if (amount < slots[i].getAmount()) {
+                if (amount <= slots[i].getAmount()) {
                     slots[i].setAmount(slots[i].getAmount() - amount);
-                    //fix nem jo
                     return true;
                 }
                 if (amount > slots[i].getAmount()) {
+                    for (int j = 0; j < slots.length; j++) {
+                        int segedam = amount - slots[i].getAmount();
+                        if (slots[j].getType() == type){
+                            if (segedam > 0){
+                                slots[i] = null;
+                                //folytatas;
+                            }
+                        }
+                    }
                     int kimaradt = amount - slots[i].getAmount();
-                    //xd
                     return true;
                 }
             }
