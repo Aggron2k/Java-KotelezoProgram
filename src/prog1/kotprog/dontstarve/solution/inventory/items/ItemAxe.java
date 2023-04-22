@@ -11,8 +11,4 @@ public class ItemAxe extends EquippableItem {
     public ItemAxe() {
         super(ItemType.AXE);
     }
-
-    public boolean isStackelheto() {
-        return false;
-    }
 }

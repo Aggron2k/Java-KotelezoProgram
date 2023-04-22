@@ -12,7 +12,5 @@ public class ItemCookedBerry extends AbstractItem {
     public ItemCookedBerry(int amount) {
         super(ItemType.COOKED_BERRY, amount);
     }
-    public boolean isStackelheto() {
-        return true;
-    }
+
 }

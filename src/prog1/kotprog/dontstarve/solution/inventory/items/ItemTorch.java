@@ -11,7 +11,4 @@ public class ItemTorch extends EquippableItem {
         super(ItemType.TORCH);
     }
 
-    public boolean isStackelheto() {
-        return false;
-    }
 }

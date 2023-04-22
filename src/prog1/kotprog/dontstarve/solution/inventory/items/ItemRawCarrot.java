@@ -12,7 +12,5 @@ public class ItemRawCarrot extends AbstractItem {
     public ItemRawCarrot(int amount) {
         super(ItemType.RAW_CARROT, amount);
     }
-    public boolean isStackelheto() {
-        return true;
-    }
+
 }

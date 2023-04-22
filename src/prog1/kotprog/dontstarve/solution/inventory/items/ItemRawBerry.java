@@ -12,7 +12,5 @@ public class ItemRawBerry extends AbstractItem {
     public ItemRawBerry(int amount) {
         super(ItemType.RAW_BERRY, amount);
     }
-    public boolean isStackelheto() {
-        return true;
-    }
+
 }

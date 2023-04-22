@@ -10,9 +10,4 @@ public class ItemFire extends AbstractItem {
     public ItemFire() {
         super(ItemType.FIRE, 1);
     }
-
-    @Override
-    public boolean isStackelheto() {
-        return false;
-    }
 }

@@ -12,7 +12,5 @@ public class ItemStone extends AbstractItem {
     public ItemStone(int amount) {
         super(ItemType.STONE, amount);
     }
-    public boolean isStackelheto() {
-        return true;
-    }
+
 }

@@ -1,9 +1,6 @@
 
 import prog1.kotprog.dontstarve.solution.inventory.Inventory;
-import prog1.kotprog.dontstarve.solution.inventory.items.AbstractItem;
-import prog1.kotprog.dontstarve.solution.inventory.items.ItemTwig;
-import prog1.kotprog.dontstarve.solution.inventory.items.ItemType;
-import prog1.kotprog.dontstarve.solution.inventory.items.EquippableItem;
+import prog1.kotprog.dontstarve.solution.inventory.items.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,20 +13,18 @@ public class Main {
     public static void main(String[] args) {
         Inventory inventory = new Inventory();
         AbstractItem[] items = inventory.slots;
-        AbstractItem log = new AbstractItem(ItemType.LOG, 16) {
-            @Override
-            public boolean isStackelheto() {
-                return true;
-            }
-        };
+        ItemLog log = new ItemLog(16);
         boolean siker = inventory.addItem(log);
+        ItemLog log2 = new ItemLog(15);
+        //inventory.addItem(log2);
         if (siker){
             System.out.println("igen");
         }else{
-            System.out.println("nem");
+          System.out.println("nem");
         }
 
         for (int i = 0; i < items.length; i++) {
+            System.out.print(i+":");
             if (items[i] != null){
                 System.out.println(items[i].getType() + " - "+ items[i].getAmount());
             }else{

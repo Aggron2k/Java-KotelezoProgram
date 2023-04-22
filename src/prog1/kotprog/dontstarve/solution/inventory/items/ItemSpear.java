@@ -10,7 +10,5 @@ public class ItemSpear extends EquippableItem {
     public ItemSpear() {
         super(ItemType.SPEAR);
     }
-    public boolean isStackelheto() {
-        return false;
-    }
+
 }

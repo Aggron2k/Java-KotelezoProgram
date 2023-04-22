@@ -10,13 +10,28 @@ public abstract class AbstractItem {
      */
     private final ItemType type;
 
-    public abstract  boolean isStackelheto();
-
-
     /**
      * Az item mennyisége.
      */
     private int amount;
+
+    public AbstractItem newitem(int  amount) {
+        return switch (this.type){
+            case AXE -> new ItemAxe();
+            case COOKED_BERRY -> new ItemCookedBerry(amount);
+            case COOKED_CARROT -> new ItemCookedCarrot(amount);
+            case FIRE -> new ItemFire();
+            case LOG -> new ItemLog(amount);
+            case PICKAXE -> new ItemPickaxe();
+            case RAW_BERRY -> new ItemRawBerry(amount);
+            case RAW_CARROT -> new ItemRawCarrot(amount);
+            case SPEAR -> new ItemSpear();
+            case STONE -> new ItemStone(amount);
+            case TORCH -> new ItemTorch();
+            case TWIG -> new ItemTwig(amount);
+        };
+
+    }
 
     /**
      * Konstruktor, amellyel a tárgy létrehozható.

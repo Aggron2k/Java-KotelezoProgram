@@ -12,7 +12,5 @@ public class ItemLog extends AbstractItem {
     public ItemLog(int amount) {
         super(ItemType.LOG, amount);
     }
-    public boolean isStackelheto() {
-        return true;
-    }
+
 }

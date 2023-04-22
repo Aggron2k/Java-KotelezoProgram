@@ -12,7 +12,5 @@ public class ItemTwig extends AbstractItem {
     public ItemTwig(int amount) {
         super(ItemType.TWIG, amount);
     }
-    public boolean isStackelheto() {
-        return true;
-    }
+
 }

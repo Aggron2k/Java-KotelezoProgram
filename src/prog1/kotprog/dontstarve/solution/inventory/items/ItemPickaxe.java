@@ -11,7 +11,5 @@ public class ItemPickaxe extends EquippableItem {
         super(ItemType.PICKAXE);
     }
 
-    public boolean isStackelheto() {
-        return false;
-    }
+
 }
