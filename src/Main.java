@@ -15,8 +15,11 @@ public class Main {
         AbstractItem[] items = inventory.slots;
         ItemLog log = new ItemLog(16);
         boolean siker = inventory.addItem(log);
-        ItemLog log2 = new ItemLog(1);
+        ItemLog log2 = new ItemLog(16);
         inventory.addItem(log2);
+
+        inventory.removeItem(ItemType.LOG, 31);
+
         if (siker){
             System.out.println("igen");
         }else{

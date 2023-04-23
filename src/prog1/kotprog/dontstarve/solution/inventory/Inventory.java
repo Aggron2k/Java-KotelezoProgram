@@ -59,23 +59,25 @@ public class Inventory implements BaseInventory {
                     }
                 }
             }
+            return false;
         }
         else{
             //Stackelhetoek
             for (int i = 0; i < slots.length; i++) {
                 //ha van indexen item
                 if (getItem(i) != null){
-                    if (item.getType() == slots[i].getType()){
-                        int segedam = ItemStack(slots[i]) - slots[i].getAmount();
-                        if (slots[i].getAmount() <= segedam){
-                            slots[i].setAmount(slots[i].getAmount() + item.getAmount());
-                            return true;
+                    if (slots[i].getType() == item.getType()){
+                        if (slots[i].getAmount() < ItemStack(slots[i])){
+                            int segedam = ItemStack(slots[i]) - slots[i].getAmount();
+                            if (item.getAmount() <= segedam){
+                                slots[i].setAmount(slots[i].getAmount() + item.getAmount());
+                                return true;
+                            }
+                            else{
+                                slots[i].setAmount(ItemStack(slots[i]));
+                                item.setAmount(item.getAmount() - segedam);
+                            }
                         }
-                        else{
-                            slots[i].setAmount(ItemStack(slots[i]));
-                            item.setAmount(item.getAmount() - segedam);
-                        }
-
                     }
                 }
             }
@@ -111,28 +113,31 @@ public class Inventory implements BaseInventory {
 
     @Override
     public boolean removeItem(ItemType type, int amount) {
+        int kivonando = amount;
         for (int i = 0; i < slots.length; i++) {
-            if (slots[i].getType() == type) {
+            if (slots[i] != null && slots[i].getType() == type ) {
                 if (amount == slots[i].getAmount()) {
-                    slots[i] = null;
+                    slots[i] = null; //ez jo
                     return true;
                 }
-                if (amount <= slots[i].getAmount()) {
-                    slots[i].setAmount(slots[i].getAmount() - amount);
-                    return true;
-                }
-                if (amount > slots[i].getAmount()) {
-                    for (int j = 0; j < slots.length; j++) {
-                        int segedam = amount - slots[i].getAmount();
-                        if (slots[j].getType() == type){
-                            if (segedam > 0){
-                                slots[i] = null;
-                                //folytatas;
-                            }
+                if (kivonando < slots[i].getAmount()) { // 16 < 15
+                    int belso = slots[i].getAmount() - kivonando;
+                    AbstractItem item2 = new AbstractItem(type, belso) {
+                        public ItemType getType() {
+                            return super.getType();
                         }
-                    }
-                    int kimaradt = amount - slots[i].getAmount();
+                        @Override
+                        public void setAmount(int belso) { // 15
+                            super.setAmount(belso);
+                        }
+                    };
+                    slots[i] = item2;
                     return true;
+                }
+                if (kivonando > slots[i].getAmount()) {// 16 > 15
+                    kivonando = kivonando - slots[i].getAmount();
+                    slots[i] = null;
+
                 }
             }
         }
