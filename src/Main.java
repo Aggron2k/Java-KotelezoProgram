@@ -13,18 +13,26 @@ public class Main {
     public static void main(String[] args) {
         Inventory inventory = new Inventory();
         AbstractItem[] items = inventory.slots;
-        ItemLog log = new ItemLog(16);
-        boolean siker = inventory.addItem(log);
-        ItemLog log2 = new ItemLog(16);
+        ItemLog log = new ItemLog(15);
+        inventory.addItem(log);
+
+        ItemRawBerry berry = new ItemRawBerry(2);
+        inventory.addItem(berry);
+
+        ItemLog log2 = new ItemLog(15);
         inventory.addItem(log2);
+        inventory.removeItem(ItemType.LOG, 16);
+        //System.out.println(inventory.slots.length);
+        //inventory.combineItems(0,1);
+        //ItemRawBerry berry = new ItemRawBerry(2);
+        //inventory.addItem(berry);
+        //inventory.eatItem(0);
 
-        inventory.removeItem(ItemType.LOG, 31);
-
-        if (siker){
-            System.out.println("igen");
-        }else{
-          System.out.println("nem");
-        }
+//        if (siker){
+//            System.out.println("igen");
+//        }else{
+//          System.out.println("nem");
+//        }
 
         for (int i = 0; i < items.length; i++) {
             System.out.print(i+":");

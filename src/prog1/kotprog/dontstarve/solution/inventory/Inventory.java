@@ -12,6 +12,7 @@ import java.util.*;
 public class Inventory implements BaseInventory {
 
     public AbstractItem[] slots;
+    public EquippableItem equippeditem;
 
     public Inventory() {
         slots = new AbstractItem[10];
@@ -116,9 +117,10 @@ public class Inventory implements BaseInventory {
         int kivonando = amount;
         for (int i = 0; i < slots.length; i++) {
             if (slots[i] != null && slots[i].getType() == type ) {
-                if (amount == slots[i].getAmount()) {
-                    slots[i] = null; //ez jo
-                    return true;
+                if (kivonando > slots[i].getAmount()) {// 16 > 15
+                    kivonando = kivonando - slots[i].getAmount();
+                    slots[i] = null;
+                    continue;
                 }
                 if (kivonando < slots[i].getAmount()) { // 16 < 15
                     int belso = slots[i].getAmount() - kivonando;
@@ -134,11 +136,12 @@ public class Inventory implements BaseInventory {
                     slots[i] = item2;
                     return true;
                 }
-                if (kivonando > slots[i].getAmount()) {// 16 > 15
-                    kivonando = kivonando - slots[i].getAmount();
-                    slots[i] = null;
-
+                if (amount == slots[i].getAmount()) {
+                    slots[i] = null; //ez jo
+                    return true;
                 }
+
+
             }
         }
         return false;
@@ -167,29 +170,156 @@ public class Inventory implements BaseInventory {
             } else {
                 return false;
             }
-        } else {
-            throw new ArrayIndexOutOfBoundsException();
         }
         return false;
     }
 
     @Override
     public boolean combineItems(int index1, int index2) {
-        return false;
+        if (index1 >= 0 && index1 < slots.length && index2 >= 0 && index2 < slots.length){
+            for (int i = 0; i < slots.length; i++) {
+                if (slots[index1].getType() == slots[index2].getType()){
+                    AbstractItem item = new AbstractItem(slots[index1].getType(), slots[index1].getAmount()) {
+                        @Override
+                        public ItemType getType() {
+                            return super.getType();
+                        }
+
+                        @Override
+                        public int getAmount() {
+                            return super.getAmount();
+                        }
+
+                        @Override
+                        public void setAmount(int amount) {
+                            super.setAmount(amount);
+                        }
+                    };
+                    if (slots[index1].getAmount() + slots[index2].getAmount() <= ItemStack(item)){
+                        item.setAmount(slots[index1].getAmount() + slots[index2].getAmount());
+                        slots[index1] = item;
+                        slots[index2] = null;
+                        return true;
+                    }
+                    if (slots[index1].getAmount() + slots[index2].getAmount() > ItemStack(item)){
+                        if (slots[index1].getAmount() == ItemStack(item)){
+                            return false;
+                        }
+                        if (slots[index1].getAmount() < ItemStack(item)){
+                            int szabadhelyindex1en = ItemStack(item) - slots[index1].getAmount();
+                            AbstractItem item1 = new AbstractItem(slots[index1].getType(), ItemStack(slots[index1])) {
+                                @Override
+                                public ItemType getType() {
+                                    return super.getType();
+                                }
+
+                                @Override
+                                public int getAmount() {
+                                    return super.getAmount();
+                                }
+                            };
+                            slots[index1] = item1;
+                            AbstractItem item2 = new AbstractItem(slots[index2].getType(), slots[index2].getAmount()) {
+                                @Override
+                                public ItemType getType() {
+                                    return super.getType();
+                                }
+
+                                @Override
+                                public int getAmount() {
+                                    return super.getAmount();
+                                }
+
+                                @Override
+                                public void setAmount(int amount) {
+                                    super.setAmount(amount - szabadhelyindex1en);
+                                }
+                            };
+                            slots[index2] = item2;
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false; //index 2őt rakod bele az index 1be
     }
 
     @Override
     public boolean equipItem(int index) {
+        for (int i = 0; i < slots.length; i++) {
+            if (slots[i] != null){
+                if (index >= 0 && index < slots.length){
+                    if (equippeditem == null){
+                        if (i == index){
+                            equippeditem = (EquippableItem) slots[i];
+                            slots[i] = null;
+                            return true;
+                        }
+                    }
+                    else{
+                        if (i == index){
+                            AbstractItem tohand = slots[i];
+                            slots[i] = null;
+                            unequipItem();
+                            equippeditem = (EquippableItem) tohand;
+                            return true;
+                        }
+                    }
+
+                }
+            }
+        }
         return false;
     }
 
     @Override
     public EquippableItem unequipItem() {
+        if (equippeditem != null){
+            for (int i = 0; i < slots.length; i++) {
+                if (slots[i] == null){
+                    slots[i] = equippeditem;
+                    equippeditem = null;
+                    return null;
+                }
+            }
+        }
         return null;
     }
 
     @Override
     public ItemType cookItem(int index) {
+        if (index >= 0 && index < slots.length){
+        for (int i = 0; i < slots.length; i++) {
+            if (slots[i] != null){
+                if (index == i){
+                        if (slots[i].getType() == ItemType.RAW_BERRY && slots[i].getAmount() == 1){
+                            AbstractItem raw_food = new AbstractItem(slots[i].getType(), slots[i].getAmount()){};
+                            slots[i] = null;
+                            return raw_food.getType();
+                        }
+                        if (slots[i].getType() == ItemType.RAW_CARROT && slots[i].getAmount() == 1){
+                            AbstractItem raw_food = new AbstractItem(slots[i].getType(), slots[i].getAmount()){};
+                            slots[i] = null;
+                            return raw_food.getType();
+                        }
+                        if (slots[i].getType() == ItemType.RAW_BERRY && slots[i].getAmount() > 1){
+                            AbstractItem raw_food = new AbstractItem(slots[i].getType(), slots[i].getAmount()) {};
+                            raw_food.setAmount(raw_food.getAmount()-1);
+                            slots[i] = raw_food;
+                            return raw_food.getType();
+                        }
+                        if (slots[i].getType() == ItemType.RAW_CARROT && slots[i].getAmount() > 1){
+                            AbstractItem raw_food = new AbstractItem(slots[i].getType(), slots[i].getAmount()) {};
+                            raw_food.setAmount(raw_food.getAmount()-1);
+                            slots[i] = raw_food;
+                            return raw_food.getType();
+                        }
+                }
+            }
+        }
+        }
+
         return null;
     }
 
@@ -197,12 +327,23 @@ public class Inventory implements BaseInventory {
     public ItemType eatItem(int index) {
         for (int i = 0; i < slots.length; i++) {
             if (i == index) {
-                if (slots[i].getType().equals(ItemType.COOKED_BERRY) ||
-                        slots[i].getType().equals(ItemType.RAW_BERRY) ||
-                        slots[i].getType().equals(ItemType.COOKED_CARROT) ||
-                        slots[i].getType().equals(ItemType.RAW_CARROT)) {
-                    slots[i].setAmount(slots[i].getAmount() - 1);
-                    return slots[i].getType();
+                if (slots[i] !=null){
+                    if (slots[i].getType() == ItemType.COOKED_BERRY ||
+                            slots[i].getType() == ItemType.RAW_BERRY ||
+                            slots[i].getType() == ItemType.COOKED_CARROT ||
+                            slots[i].getType() == ItemType.RAW_CARROT) {
+                        if (slots[i].getAmount() == 1){
+                            AbstractItem megevett = slots[i];
+                            slots[i] = null;
+                            return megevett.getType();
+                        }
+                        else{
+                            AbstractItem hamham = slots[i];
+                            hamham.setAmount(slots[i].getAmount() - 1);
+                            slots[i] = hamham;
+                            return hamham.getType();
+                        }
+                    }
                 }
             }
         }
@@ -222,13 +363,16 @@ public class Inventory implements BaseInventory {
 
     @Override
     public EquippableItem equippedItem() {
-        return null;
+        if (equippeditem != null){
+            return equippeditem;
+        }else{
+            return null;
+        }
     }
 
     @Override
     public AbstractItem getItem(int index) {
-        if (index <= -1 || index >= slots.length+1){
-            throw new ArrayIndexOutOfBoundsException();
+        if (index <= -1 || index >= slots.length){
         }
         else{
             if (slots[index] == null){
@@ -238,7 +382,7 @@ public class Inventory implements BaseInventory {
                 return slots[index];
             }
         }
-
+        return null;
     }
 
 }
